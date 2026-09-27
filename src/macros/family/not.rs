@@ -1,59 +1,22 @@
-#[macro_export]
-macro_rules! not_asmjs {
-    ($body:block) => {{
-        #[cfg(not(target_family = "asmjs"))]
-        {
-            $crate::Cfg::some($body)
-        }
-
-        #[cfg(target_family = "asmjs")]
-        {
-            $crate::Cfg::none()
-        }
-    }};
+ macro_rules! make_not_family_macros {
+    ($($macro_name:ident => $family:ident),* $(,)?) => {
+        $(
+            #[macro_export]
+            macro_rules! $macro_name {
+                ($body:block) => {{
+                    #[cfg(not(target_family = stringify!($family)))]
+                    {
+                        $body
+                    }
+                }};
+            }
+        )*
+    };
 }
 
-#[macro_export]
-macro_rules! not_unix {
-    ($body:block) => {{
-        #[cfg(not(target_family = "unix"))]
-        {
-            $crate::Cfg::some($body)
-        }
-
-        #[cfg(target_family = "unix")]
-        {
-            $crate::Cfg::none()
-        }
-    }};
-}
-
-#[macro_export]
-macro_rules! not_wasm_family {
-    ($body:block) => {{
-        #[cfg(not(target_family = "wasm"))]
-        {
-            $crate::Cfg::some($body)
-        }
-
-        #[cfg(target_family = "wasm")]
-        {
-            $crate::Cfg::none()
-        }
-    }};
-}
-
-#[macro_export]
-macro_rules! not_windows_family {
-    ($body:block) => {{
-        #[cfg(not(target_family = "windows"))]
-        {
-            $crate::Cfg::some($body)
-        }
-
-        #[cfg(target_family = "windows")]
-        {
-            $crate::Cfg::none()
-        }
-    }};
-}
+make_not_family_macros!(
+    not_asmjs => asmjs,
+    not_unix => unix,
+    not_wasm_family => wasm,
+    not_windows_family => windows,
+);

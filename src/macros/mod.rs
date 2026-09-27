@@ -1,10 +1,8 @@
 mod os;
 mod arch;
 mod family; 
-
-#[macro_export]
-macro_rules! always {
-    ($body:block) => {{
-        $crate::Cfg::some($body)
-    }};
-}
+mod pointer;
+mod endian;
+mod env;
+mod build;
+mod vendor;
